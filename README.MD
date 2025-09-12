@@ -1,7 +1,7 @@
 ![Tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/potapich1978/b1c2de0894f556638077744e2530153c/raw/OpcUaNetStandard-status.json)
 ![Coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/potapich1978/1dfd01277a348944ab1c77b6b15713cf/raw/OpcNetStandard-coverage.json)
 ![License](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/potapich1978/193c9aa84b5eb75ae534e41d9764e65c/raw/license.json)
-[![NuGet](https://img.shields.io/nuget/v/Potapich.OpcUaNetStandart.svg)](https://www.nuget.org/packages/Potapich.OpcUaNetStandard)
+[![NuGet](https://img.shields.io/nuget/v/Potapich.OpcUaNetStandart.svg)](https://www.nuget.org/packages/Potapich.OpcUaNetStandart)
 
 # Potapich.OpcUaNetStandard  
 High-performance OPC UA client library for .NET with event-driven architecture, dependency injection support, and flexible subscription management.
