@@ -1,3 +1,7 @@
+![Tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/potapich1978/b1c2de0894f556638077744e2530153c/raw/OpcUaNetStandard-status.json)
+![Coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/potapich1978/1dfd01277a348944ab1c77b6b15713cf/raw/OpcNetStandard-coverage.json)
+![License](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/potapich1978/193c9aa84b5eb75ae534e41d9764e65c/raw/license.json)
+
 # Potapich.OpcUaNetStandard  
 High-performance OPC UA client library for .NET with event-driven architecture, dependency injection support, and flexible subscription management.
 
@@ -45,12 +49,12 @@ The result is this integrated solution that maintains the reliability we needed 
 
 
 ## Key Features
-- **Event-Driven Architecture** – Dispatcher pattern for OPC UA subscriptions  
-- **Multi-Platform Support** – Compatible with .NET Standard 2.0 through .NET 9  
-- **Dependency Injection Ready** – Seamless integration with Microsoft.Extensions.DependencyInjection  
-- **Advanced Subscription Management** – Multiple callbacks per monitored item  
-- **Automatic Session Recovery** – Reconnection and keep-alive mechanisms  
-- **Thread-Safe Operations** – Safe concurrent subscription and callback handling  
+- **Event-Driven Architecture** â€“ Dispatcher pattern for OPC UA subscriptions  
+- **Multi-Platform Support** â€“ Compatible with .NET Standard 2.0 through .NET 9  
+- **Dependency Injection Ready** â€“ Seamless integration with Microsoft.Extensions.DependencyInjection  
+- **Advanced Subscription Management** â€“ Multiple callbacks per monitored item  
+- **Automatic Session Recovery** â€“ Reconnection and keep-alive mechanisms  
+- **Thread-Safe Operations** â€“ Safe concurrent subscription and callback handling  
 
 
 ## Best Practices
@@ -82,15 +86,15 @@ graph TD
 
 ### Event Dispatcher Pattern
 Three main event types drive the system:
-- **RegisterSession** – Establishes a new OPC UA session  
-- **AddItemToSubscription** – Adds a monitored item to a subscription  
-- **RemoveItemFromSubscription** – Removes a monitored item from a subscription  
+- **RegisterSession** â€“ Establishes a new OPC UA session  
+- **AddItemToSubscription** â€“ Adds a monitored item to a subscription  
+- **RemoveItemFromSubscription** â€“ Removes a monitored item from a subscription  
 
 ### Core Components
-- **OpcSessionsManager** – Manages OPC UA session lifecycle  
-- **OpcSubscriptionsManager** – Handles subscriptions and monitored items  
-- **OpcCallbacksManager** – Supports multiple callbacks per OPC tag  
-- **OpcConfigurationManager** – Manages client configuration  
+- **OpcSessionsManager** â€“ Manages OPC UA session lifecycle  
+- **OpcSubscriptionsManager** â€“ Handles subscriptions and monitored items  
+- **OpcCallbacksManager** â€“ Supports multiple callbacks per OPC tag  
+- **OpcConfigurationManager** â€“ Manages client configuration  
 
 
 ## Installation
