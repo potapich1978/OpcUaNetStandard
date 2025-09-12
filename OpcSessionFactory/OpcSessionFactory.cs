@@ -84,7 +84,13 @@ namespace OpcSessionFactory
             };
 
             await _opcFoundationSession.ValidatAppInstance(applicationInstance);
-            var selectedEndpoint = await _opcFoundationSession.SelectEndpoint(config, sessionParams.ServerEndPoint, default);
+
+            var selectedEndpoint = await _opcFoundationSession.SelectEndpoint(
+                config, 
+                sessionParams.ServerEndPoint, 
+                sessionParams.CancellationToken
+            );
+
             var endpointConfiguration = EndpointConfiguration.Create(config);
             var endPoint = new ConfiguredEndpoint(null, selectedEndpoint, endpointConfiguration);
             var userIdentity = new UserIdentity(new AnonymousIdentityToken());

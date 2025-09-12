@@ -1,4 +1,6 @@
 ﻿
+using System.Threading;
+
 namespace OpcSessionFactory.Abstract
 {
     public interface ISessionParams
@@ -63,5 +65,11 @@ namespace OpcSessionFactory.Abstract
         /// </summary>
         /// <value>The default session timeout.</value>
         int SessionTimeoutSec { get; }
+
+        /// <summary>
+        /// CancellationToken
+        /// </summary>
+        /// <remarks>stop retries create session if IsCancelledRequested</remarks>
+        CancellationToken CancellationToken { get; }
     }
 }

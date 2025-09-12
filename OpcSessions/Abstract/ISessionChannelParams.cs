@@ -1,7 +1,10 @@
 ﻿
+using System.Threading;
+
 namespace OpcSessions.Abstract
 {
-    public interface ISessionChannelParams {
+    public interface ISessionChannelParams
+    {
 
         /// <summary>
         /// Application identifier for which the session will be created.
@@ -63,5 +66,11 @@ namespace OpcSessions.Abstract
         /// </summary>
         /// <value>The default session timeout.</value>
         int SessionTimeoutSec { get; }
+
+        /// <summary>
+        /// CancallationToken
+        /// </summary>
+        /// <remarks>Stop retries create OPC session if IsCancalledRequested</remarks>
+        CancellationToken CancellationToken { get; }
     }
 }

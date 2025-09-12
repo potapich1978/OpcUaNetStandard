@@ -18,9 +18,9 @@
 	  <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
-	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	<!--<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 		<DebugType>none</DebugType>
-	</PropertyGroup>
+	</PropertyGroup>-->
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Events\Events.csproj" PrivateAssets="all" />

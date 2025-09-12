@@ -3,6 +3,7 @@ using Opc.Ua.Client;
 using OpcSessionFactory.Abstract;
 using OpcSessions.Abstract;
 using System.Collections.Concurrent;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace OpcSessions
@@ -45,6 +46,9 @@ namespace OpcSessions
 
             /// <inheritdoc/>
             public int SessionTimeoutSec { get; internal set; } = 60;
+
+            /// <inheritdoc/>
+            public CancellationToken  CancellationToken { get; internal set; }
         }
 
 
@@ -104,7 +108,8 @@ namespace OpcSessions
                 MinSubscriptionLifeTimeSec=sessionParams.MinSubscriptionLifeTimeSec,
                 OperationTimeoutSec=sessionParams.OperationTimeoutSec,
                 SecurityTokenLifeTimeSec=sessionParams.SecurityTokenLifeTimeSec,
-                SessionTimeoutSec = sessionParams.SessionTimeoutSec
+                SessionTimeoutSec = sessionParams.SessionTimeoutSec,
+                CancellationToken = sessionParams.CancellationToken
             });
 
             sessions_.AddOrUpdate(appId, newSession, (k, s) => newSession);

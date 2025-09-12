@@ -47,6 +47,9 @@ namespace Handlers
 
             /// <inheritdoc/>
             public int SessionTimeoutSec { get; internal set; } = 60;
+
+            /// <inheritdoc/>
+            public CancellationToken CancellationToken { get; internal set; }
         }
 
 
@@ -102,7 +105,8 @@ namespace Handlers
                 MinSubscriptionLifeTimeSec = registerCommand.MinSubscriptionLifeTimeSec,
                 SecurityTokenLifeTimeSec = registerCommand.SecurityTokenLifeTimeSec,
                 OperationTimeoutSec = registerCommand.OperationTimeoutSec,
-                SessionTimeoutSec = registerCommand.SessionTimeoutSec
+                SessionTimeoutSec = registerCommand.SessionTimeoutSec,
+                CancellationToken = token
             });
         }
     }
