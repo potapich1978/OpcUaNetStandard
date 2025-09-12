@@ -96,7 +96,7 @@ Three main event types drive the system:
 
 ## Installation
 ```xml
-<PackageReference Include="Potapich.OpcUaNetStandard" Version="1.0.0" />
+<PackageReference Include="Potapich.OpcUaNetStandart" Version="1.0.0" />
 ```
 
 # Quick Start
