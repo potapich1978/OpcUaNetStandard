@@ -1,0 +1,63 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+	  <IsPackable>true</IsPackable>
+	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+	  <PackageId>Potapich.OpcUaNetStandart</PackageId>
+	  <Version>1.0.0</Version>
+	  <Authors>Mikhail Potapov</Authors>
+	  <Description>High-performance event-driven processing system with channel-based architecture.</Description>
+	  <RepositoryUrl>https://github.com/potapich1978/OpcUaCore.git</RepositoryUrl>
+	  <PackageTags>opcua subscriptions</PackageTags>
+	  <Title>OpcUaNetStandart</Title>
+	  <Copyright>Mikhail Potapov</Copyright>
+	  <PackageProjectUrl>https://github.com/potapich1978/OpcUaNetStandart.git</PackageProjectUrl>
+	  <PackageReadmeFile>README.MD</PackageReadmeFile>
+	  <PackageLicenseExpression>MIT</PackageLicenseExpression>
+	  <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+  </PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<DebugType>none</DebugType>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Events\Events.csproj" PrivateAssets="all" />
+	  <ProjectReference Include="..\OpcSessions\OpcSessions.csproj" PrivateAssets="all"/>
+	  <ProjectReference Include="..\OpcSubscriptions\OpcSubscriptions.csproj" PrivateAssets="all"/>
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Potapich.EventFlowChannel" Version="[1.0.1,2.0.0)" />
+		<PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Client" Version="[1.5.376.244,2.0.0)" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\README.MD">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
+
+	<Target Name="IncludeDependencies" BeforeTargets="_GetPackageFiles">
+		<ItemGroup>
+			<Content Include="$(OutputPath)\Events.dll" Pack="true" PackagePath="lib\netstandard2.0\" />
+			<Content Include="$(OutputPath)\OpcCallbacks.dll" Pack="true" PackagePath="lib\netstandard2.0\" />
+			<Content Include="$(OutputPath)\OpcConfigFactory.dll" Pack="true" PackagePath="lib\netstandard2.0\" />
+			<Content Include="$(OutputPath)\OpcSessionFactory.dll" Pack="true" PackagePath="lib\netstandard2.0\" />
+			<Content Include="$(OutputPath)\OpcSessions.dll" Pack="true" PackagePath="lib\netstandard2.0\" />
+			<Content Include="$(OutputPath)\OpcSubscriptions.dll" Pack="true" PackagePath="lib\netstandard2.0\" />
+		</ItemGroup>
+	</Target>
+
+	<ItemGroup>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+			<_Parameter1>Handlers.tests</_Parameter1>
+		</AssemblyAttribute>
+		<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+			<_Parameter1>DynamicProxyGenAssembly2</_Parameter1>
+		</AssemblyAttribute>
+	</ItemGroup>
+
+</Project>
