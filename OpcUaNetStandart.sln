@@ -17,8 +17,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpcConfigFactory", "OpcConf
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpcCallbacks", "OpcCallbacks\OpcCallbacks.csproj", "{70074D1B-948A-45A8-B888-5B89624E3CE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp1", "ConsoleApp1\ConsoleApp1.csproj", "{857E41DA-AD31-436E-92F0-4D5589018EA6}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_tests", "_tests", "{36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpcCallbacks.tests", "OpcCallbacks.tests\OpcCallbacks.tests.csproj", "{B85AC7F9-9A39-49E6-BA05-D3E851EB2B82}"
@@ -74,10 +72,6 @@ Global
 		{70074D1B-948A-45A8-B888-5B89624E3CE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70074D1B-948A-45A8-B888-5B89624E3CE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70074D1B-948A-45A8-B888-5B89624E3CE5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{857E41DA-AD31-436E-92F0-4D5589018EA6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{857E41DA-AD31-436E-92F0-4D5589018EA6}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{857E41DA-AD31-436E-92F0-4D5589018EA6}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{857E41DA-AD31-436E-92F0-4D5589018EA6}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B85AC7F9-9A39-49E6-BA05-D3E851EB2B82}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B85AC7F9-9A39-49E6-BA05-D3E851EB2B82}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B85AC7F9-9A39-49E6-BA05-D3E851EB2B82}.Release|Any CPU.ActiveCfg = Release|Any CPU
