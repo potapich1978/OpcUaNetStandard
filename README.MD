@@ -1,13 +1,10 @@
 ![Tests](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/potapich1978/b1c2de0894f556638077744e2530153c/raw/OpcUaNetStandard-status.json)
 ![Coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/potapich1978/1dfd01277a348944ab1c77b6b15713cf/raw/OpcNetStandard-coverage.json)
 ![License](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/potapich1978/193c9aa84b5eb75ae534e41d9764e65c/raw/license.json)
+[![NuGet](https://img.shields.io/nuget/v/Potapich.OpcUaNetStandard.svg)](https://www.nuget.org/packages/Potapich.OpcUaNetStandard)
 
 # Potapich.OpcUaNetStandard  
 High-performance OPC UA client library for .NET with event-driven architecture, dependency injection support, and flexible subscription management.
-
-[![NuGet](https://img.shields.io/nuget/v/Potapich.OpcUaNetStandard.svg)](https://www.nuget.org/packages/Potapich.OpcUaNetStandard)
-[![Build](https://github.com/potapich1978/OpcUaNetStandard/actions/workflows/dotnet.yml/badge.svg)](https://github.com/potapich1978/OpcUaNetStandard/actions)
-
 
 ## Origins & Background
 This library has an interesting origin story. For many years, I relied on Kepware's ClientAce libraries for OPC UA connectivity. I must give credit where it's due - their package served us reliably and performed without issues through countless production deployments. However, as with any commercial solution, licensing costs were a consideration, and when our licenses were approaching expiration, I began evaluating alternatives.
