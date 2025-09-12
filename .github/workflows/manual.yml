@@ -1,0 +1,118 @@
+name: Run Tests
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    outputs:
+      test_status: ${{ steps.set_test_status.outputs.status }}
+      coverage_percent: ${{ steps.process_coverage.outputs.percent }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '9.0.x'
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build
+      run: dotnet build --configuration Release --no-restore
+
+    - name: Install coverlet.collector
+      run: |
+        dotnet add Events.tests package coverlet.collector --version 6.0.0
+        dotnet add Handlers.tests package coverlet.collector --version 6.0.0
+        dotnet add OpcCallbacks.tests package coverlet.collector --version 6.0.0
+        dotnet add OpcConfigFactory.tests package coverlet.collector --version 6.0.0
+        dotnet add OpcSessions.tests package coverlet.collector --version 6.0.0
+        dotnet add OpcSessionsFactory.tests package coverlet.collector --version 6.0.0
+        dotnet add OpcSubscriptions.tests package coverlet.collector --version 6.0.0
+
+    - name: Run tests with coverage
+      id: tests
+      run: |
+        dotnet test --configuration Release --no-build --collect:"XPlat Code Coverage" --results-directory ./coverage
+      continue-on-error: true
+
+    - name: Set test status
+      id: set_test_status
+      run: |
+        if [ ${{ steps.tests.outcome }} == 'success' ]; then
+          echo "status=passing" >> $GITHUB_OUTPUT
+        else
+          echo "status=failing" >> $GITHUB_OUTPUT
+        fi
+
+    - name: Process coverage reports
+      id: process_coverage
+      if: always()
+      run: |
+        # Find all coverage files
+        find ./coverage -name '*.xml' -exec echo "Found file: {}" \;
+        
+        # Install reportgenerator
+        dotnet tool install --global dotnet-reportgenerator-globaltool --version 5.2.0
+        
+        # Generate merged report
+        reportgenerator -reports:./coverage/**/coverage.cobertura.xml -targetdir:./coverage-report -reporttypes:JsonSummary
+        
+        # Extract coverage percentage from summary
+        percentage=$(jq -r '.summary.linecoverage * 1 | round' ./coverage-report/Summary.json)
+        echo "Coverage percentage: $percentage%"
+        echo "percent=$percentage%" >> $GITHUB_OUTPUT
+
+  badges:
+    runs-on: ubuntu-latest
+    needs: test
+    if: always()
+    steps:
+    - name: Debug outputs
+      run: |
+        echo "Test status: ${{ needs.test.outputs.test_status }}"
+        echo "Coverage percent: ${{ needs.test.outputs.coverage_percent }}"
+
+    - name: Update Test Status Badge
+      uses: schneegans/dynamic-badges-action@v1.7.0
+      with:
+        auth: ${{ secrets.GIST_SECRET }}
+        gistID: b1c2de0894f556638077744e2530153c
+        filename: OpcUaNetStandard-status.json
+        label: Tests
+        message: ${{ needs.test.outputs.test_status }}
+        color: ${{ contains(needs.test.outputs.test_status, 'passing') && 'green' || 'red' }}
+        namedLogo: github
+
+    - name: Update Coverage Badge
+      uses: schneegans/dynamic-badges-action@v1.7.0
+      with:
+        auth: ${{ secrets.GIST_SECRET }}
+        gistID: 1dfd01277a348944ab1c77b6b15713cf
+        filename: OpcNetStandard-coverage.json
+        label: Coverage
+        message: ${{ needs.test.outputs.coverage_percent }}
+        color: ${{ format('{0}', contains(needs.test.outputs.coverage_percent, '100') && 'brightgreen' || contains(needs.test.outputs.coverage_percent, '9') && 'green' || contains(needs.test.outputs.coverage_percent, '8') && 'yellowgreen' || contains(needs.test.outputs.coverage_percent, '7') && 'yellow' || contains(needs.test.outputs.coverage_percent, '6') && 'orange' || 'red') }}
+        namedLogo: github
+
+    - name: Update License Badge
+      uses: schneegans/dynamic-badges-action@v1.7.0
+      with:
+        auth: ${{ secrets.GIST_SECRET }}
+        gistID: 193c9aa84b5eb75ae534e41d9764e65c
+        filename: license.json
+        label: License
+        message: MIT
+        color: blue
+        namedLogo: nuget        
