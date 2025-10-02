@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Events
+﻿namespace Events
 {
     /// <summary>
     /// represent information about OPC node
@@ -23,5 +19,10 @@ namespace Events
         /// node is folder
         /// </summary>
         bool IsFolder { get; }
+
+        /// <summary>
+        /// can write value
+        /// </summary>
+        bool Writable { get; }
     }
 }
