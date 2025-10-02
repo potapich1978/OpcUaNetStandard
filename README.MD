@@ -169,8 +169,9 @@ await opcChannel.Enqueue(new BrowseServer(
     null, 
     (node) => {
         Console.WriteLine(
-            $"caption = {node.DisplayName}, " +
+            $"Caption = {node.DisplayName}, " +
             $"FullName = \"{node.FullName}\", " +
+            $"Writable = {node.Writable}, " +
             $"IsFolder = {node.IsFolder}");
     }));
 
@@ -180,8 +181,9 @@ await opcChannel.Enqueue(new BrowseServer(
     "ns=2;s=Your.Folder.Name", 
     (node) => {
         Console.WriteLine(
-            $"caption = {node.DisplayName}, " +
+            $"Caption = {node.DisplayName}, " +
             $"FullName = \"{node.FullName}\", " +
+            $"Writable = {node.Writable}, " +
             $"IsFolder = {node.IsFolder}");
     }));
 ```

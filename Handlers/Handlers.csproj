@@ -5,7 +5,7 @@
 	  <IsPackable>true</IsPackable>
 	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	  <PackageId>Potapich.OpcUaNetStandart</PackageId>
-	  <Version>1.1.0</Version>
+	  <Version>1.2.0</Version>
 	  <Authors>Mikhail Potapov</Authors>
 	  <Description>High-performance event-driven processing system with channel-based architecture.</Description>
 	  <RepositoryUrl>https://github.com/potapich1978/OpcUaCore.git</RepositoryUrl>
