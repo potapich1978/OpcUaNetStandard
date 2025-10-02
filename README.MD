@@ -51,7 +51,8 @@ The result is this integrated solution that maintains the reliability we needed 
 - **Dependency Injection Ready** – Seamless integration with Microsoft.Extensions.DependencyInjection  
 - **Advanced Subscription Management** – Multiple callbacks per monitored item  
 - **Automatic Session Recovery** – Reconnection and keep-alive mechanisms  
-- **Thread-Safe Operations** – Safe concurrent subscription and callback handling  
+- **Thread-Safe Operations** – Safe concurrent subscription and callback handling
+- **Browse Server** - Browse OPC nodes hierarchy
 
 
 ## Best Practices
@@ -158,6 +159,31 @@ await opcChannel.Enqueue(new RemoveItemFromSubscription(appId, tagId, "callback-
 ```text
 12:31:02 Your.Tag.Identifier = 42
 12:31:03 Your.Tag.Identifier = 43
+```
+
+## Get Nodes From OPC Server
+```cs
+///get root level nodes
+await opcChannel.Enqueue(new BrowseServer(
+    appId,
+    null, 
+    (node) => {
+        Console.WriteLine(
+            $"caption = {node.DisplayName}, " +
+            $"FullName = \"{node.FullName}\", " +
+            $"IsFolder = {node.IsFolder}");
+    }));
+
+///get sub level nodes
+await opcChannel.Enqueue(new BrowseServer(
+    appId,
+    "ns=2;s=Your.Folder.Name", 
+    (node) => {
+        Console.WriteLine(
+            $"caption = {node.DisplayName}, " +
+            $"FullName = \"{node.FullName}\", " +
+            $"IsFolder = {node.IsFolder}");
+    }));
 ```
 
 

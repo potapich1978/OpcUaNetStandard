@@ -20,5 +20,10 @@ namespace Events
         /// Remove a monitored item from a subscription.
         /// </summary>
         RemoveItemFromSubscription,
+
+        /// <summary>
+        /// Browse server nodes
+        /// </summary>
+        Browse
     }
 }
