@@ -72,10 +72,11 @@ namespace OpcSubscriptions
                 };
                 session.AddSubscription(subscription);
                 await CreateSubscriptionAsync(subscription);
-                await _callbackManager.AddItemToSubscription(subscription, tagId, eventKey, callback);
-                await ApplySubscriptionChanges(subscription);
-                _subscriptions.AddOrUpdate(appId, subscription, (k, s) => subscription);
             }
+            await _callbackManager.AddItemToSubscription(subscription, tagId, eventKey, callback);
+            await ApplySubscriptionChanges(subscription);
+            _subscriptions.AddOrUpdate(appId, subscription, (k, s) => subscription);
+
             await Task.CompletedTask;
         }
 
