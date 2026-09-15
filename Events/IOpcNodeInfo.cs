@@ -1,4 +1,6 @@
-﻿namespace Events
+﻿using System;
+
+namespace Events
 {
     /// <summary>
     /// represent information about OPC node
@@ -24,5 +26,10 @@
         /// can write value
         /// </summary>
         bool Writable { get; }
+
+        /// <summary>
+        /// .NET type of node value (array type for array nodes). null for folders
+        /// </summary>
+        Type DataType { get; }
     }
 }
