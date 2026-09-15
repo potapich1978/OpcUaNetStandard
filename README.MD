@@ -83,10 +83,11 @@ graph TD
 ```    
 
 ### Event Dispatcher Pattern
-Three main event types drive the system:
+Four main event types drive the system:
 - **RegisterSession** – Establishes a new OPC UA session  
 - **AddItemToSubscription** – Adds a monitored item to a subscription  
 - **RemoveItemFromSubscription** – Removes a monitored item from a subscription  
+- **BrowseServer** – Enumerates child nodes of a folder with their value data types  
 
 ### Core Components
 - **OpcSessionsManager** – Manages OPC UA session lifecycle  
@@ -97,7 +98,7 @@ Three main event types drive the system:
 
 ## Installation
 ```xml
-<PackageReference Include="Potapich.OpcUaNetStandart" Version="1.0.0" />
+<PackageReference Include="Potapich.OpcUaNetStandart" Version="1.3.0" />
 ```
 
 # Quick Start
@@ -172,7 +173,8 @@ await opcChannel.Enqueue(new BrowseServer(
             $"Caption = {node.DisplayName}, " +
             $"FullName = \"{node.FullName}\", " +
             $"Writable = {node.Writable}, " +
-            $"IsFolder = {node.IsFolder}");
+            $"IsFolder = {node.IsFolder}, " +
+            $"DataType = {node.DataType?.Name}");
     }));
 
 ///get sub level nodes
@@ -184,8 +186,17 @@ await opcChannel.Enqueue(new BrowseServer(
             $"Caption = {node.DisplayName}, " +
             $"FullName = \"{node.FullName}\", " +
             $"Writable = {node.Writable}, " +
-            $"IsFolder = {node.IsFolder}");
+            $"IsFolder = {node.IsFolder}, " +
+            $"DataType = {node.DataType?.Name}");
     }));
+```
+`DataType` is the .NET type of the node value (`Single`, `Boolean`, `UInt16`, `Single[]` for arrays, ...),
+resolved from the `DataType` and `ValueRank` attributes of each variable node. For folders it is `null`.
+### Console Output
+```text
+Caption = Diametr, FullName = "ns=2;s=KEL-120-2.KEL-120-2.Diam.Diametr", Writable = True, IsFolder = False, DataType = Single
+Caption = CapOpen, FullName = "ns=2;s=KEL-120-2.KEL-120-2.Diam.CapOpen", Writable = True, IsFolder = False, DataType = Boolean
+Caption = Count, FullName = "ns=2;s=KEL-120-2.KEL-120-2.Diam.Count", Writable = True, IsFolder = False, DataType = UInt16
 ```
 
 
