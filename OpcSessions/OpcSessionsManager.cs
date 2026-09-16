@@ -92,10 +92,10 @@ namespace OpcSessions
             var appId = sessionParams.AppId;
             var url = sessionParams.ServerEndPoint;
 
-            if (sessions_.TryGetValue(appId, out var session))
+            if (sessions_.ContainsKey(appId))
             {
                 logger_.LogWarning($"session for app {appId} already exist");
-                await Task.CompletedTask;
+                return;
             }
 
             var newSession = await factory_.GetSession(new SessionParams { 

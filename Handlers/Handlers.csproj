@@ -5,7 +5,7 @@
 	  <IsPackable>true</IsPackable>
 	  <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	  <PackageId>Potapich.OpcUaNetStandart</PackageId>
-	  <Version>1.3.0</Version>
+	  <Version>1.4.0</Version>
 	  <Authors>Mikhail Potapov</Authors>
 	  <Description>High-performance event-driven processing system with channel-based architecture.</Description>
 	  <RepositoryUrl>https://github.com/potapich1978/OpcUaCore.git</RepositoryUrl>
@@ -29,7 +29,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Potapich.EventFlowChannel" Version="[1.0.1,2.0.0)" />
+		<PackageReference Include="Potapich.EventFlowChannel" Version="[1.5.0,2.0.0)" />
 		<PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Client" Version="[1.5.376.244,2.0.0)" />
 	</ItemGroup>
 

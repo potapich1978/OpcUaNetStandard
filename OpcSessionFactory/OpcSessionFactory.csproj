@@ -5,7 +5,7 @@
   </PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Potapich.EventFlowChannel" Version="1.0.1" />
+		<PackageReference Include="Potapich.EventFlowChannel" Version="1.5.0" />
 		<PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Client" Version="1.5.376.244" />
 	</ItemGroup>
 

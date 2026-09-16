@@ -52,7 +52,7 @@ The result is this integrated solution that maintains the reliability we needed 
 - **Advanced Subscription Management** – Multiple callbacks per monitored item  
 - **Automatic Session Recovery** – Reconnection and keep-alive mechanisms  
 - **Thread-Safe Operations** – Safe concurrent subscription and callback handling
-- **Browse Server** - Browse OPC nodes hierarchy
+- **Browse Server** - Browse OPC nodes hierarchy node by node or one level at once, with value data types
 
 
 ## Best Practices
@@ -83,11 +83,12 @@ graph TD
 ```    
 
 ### Event Dispatcher Pattern
-Four main event types drive the system:
+Five main event types drive the system:
 - **RegisterSession** – Establishes a new OPC UA session  
 - **AddItemToSubscription** – Adds a monitored item to a subscription  
 - **RemoveItemFromSubscription** – Removes a monitored item from a subscription  
-- **BrowseServer** – Enumerates child nodes of a folder with their value data types  
+- **BrowseServer** – Enumerates child nodes of a folder one by one with their value data types  
+- **BrowseServerComplete** – Enumerates child nodes of a folder and delivers the whole level at once  
 
 ### Core Components
 - **OpcSessionsManager** – Manages OPC UA session lifecycle  
@@ -98,7 +99,7 @@ Four main event types drive the system:
 
 ## Installation
 ```xml
-<PackageReference Include="Potapich.OpcUaNetStandart" Version="1.3.0" />
+<PackageReference Include="Potapich.OpcUaNetStandart" Version="1.4.0" />
 ```
 
 # Quick Start
@@ -109,6 +110,7 @@ internal class MyLogger : IGenericEventDispatcherLogger
     public void LogError(string message) => Console.WriteLine(message);
     public void LogError(string message, Exception exception) => Console.WriteLine($"Error: {exception}");
     public void LogWarning(string message) => Console.WriteLine(message);
+    public void LogMessage(string message) => Console.WriteLine(message);
 }
 ```
 ## Configure Services
@@ -192,6 +194,30 @@ await opcChannel.Enqueue(new BrowseServer(
 ```
 `DataType` is the .NET type of the node value (`Single`, `Boolean`, `UInt16`, `Single[]` for arrays, ...),
 resolved from the `DataType` and `ValueRank` attributes of each variable node. For folders it is `null`.
+
+`BrowseServer` calls the node callback for every node as soon as the level is browsed and never signals the end:
+`Enqueue` returns right after the event is queued. When the caller needs the whole level as a result of one call,
+use `BrowseServerComplete` and await its completion callback:
+```cs
+///get sub level nodes as one list
+var completion = new TaskCompletionSource<IReadOnlyList<IOpcNodeInfo>>();
+await opcChannel.Enqueue(new BrowseServerComplete(
+    appId,
+    "ns=2;s=Your.Folder.Name",
+    (nodes, error) =>
+    {
+        if (error == null)
+            completion.SetResult(nodes);
+        else
+            completion.SetException(error);
+    }));
+
+var level = await completion.Task;
+foreach (var node in level)
+    Console.WriteLine($"Caption = {node.DisplayName}, DataType = {node.DataType?.Name}");
+```
+The callback is invoked exactly once. On success it receives the nodes (an empty list for an empty folder) and `null`.
+When the session for `appId` is not registered or the browse fails, it receives `null` and the exception.
 ### Console Output
 ```text
 Caption = Diametr, FullName = "ns=2;s=KEL-120-2.KEL-120-2.Diam.Diametr", Writable = True, IsFolder = False, DataType = Single
