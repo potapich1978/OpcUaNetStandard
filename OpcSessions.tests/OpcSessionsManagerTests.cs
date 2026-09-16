@@ -16,6 +16,8 @@ namespace OpcSessions.tests
     /// </summary>
     public class OpcSessionsManagerTests
     {
+        private const string Endpoint = "opc.tcp://localhost:4840";
+
         private readonly IOpcSessionFactory _factoryMock;
         private readonly IGenericEventDispatcherLogger _loggerMock;
         private readonly OpcSessionsManager _manager;
@@ -37,7 +39,7 @@ namespace OpcSessions.tests
             // Arrange
             var sessionParams = Substitute.For<ISessionChannelParams>();
             sessionParams.AppId.Returns("App1");
-            sessionParams.ServerEndPoint.Returns("opc.tcp://localhost:4840");
+            sessionParams.ServerEndPoint.Returns(Endpoint);
             sessionParams.ChannelLifeTimeSec.Returns(111);
             sessionParams.KeepAliveIntervalSec.Returns(222);
             sessionParams.MaxBufferSizeBytes.Returns(333);
@@ -77,21 +79,24 @@ namespace OpcSessions.tests
         }
 
         /// <summary>
-        /// Ensures that if <see cref="OpcSessionsManager.AddSession"/> 
-        /// is called twice for the same AppId, a warning is logged 
-        /// and the existing session is not replaced silently.
+        /// Ensures that if <see cref="OpcSessionsManager.AddSession"/>
+        /// is called twice for the same AppId, a warning is logged,
+        /// no second session is created and the existing session is kept.
         /// </summary>
         [Fact]
-        public async Task AddSession_ShouldLogWarning_IfSessionAlreadyExists()
+        public async Task AddSession_ShouldLogWarningAndKeepExistingSession_IfSessionAlreadyExists()
         {
             // Arrange
             var sessionParams = Substitute.For<ISessionChannelParams>();
             sessionParams.AppId.Returns("App2");
-            sessionParams.ServerEndPoint.Returns("opc.tcp://localhost:4840");
+            sessionParams.ServerEndPoint.Returns(Endpoint);
 
-            var sessionMock = Substitute.For<IOpcUaSession>();
+            var existingSession = Substitute.For<IOpcUaSession>();
+            var existingUaSession = Substitute.For<ISession>();
+            existingSession.Session.Returns(existingUaSession);
+            var replacementSession = Substitute.For<IOpcUaSession>();
             _factoryMock.GetSession(Arg.Any<ISessionParams>())
-                        .Returns(Task.FromResult(sessionMock));
+                        .Returns(Task.FromResult(existingSession), Task.FromResult(replacementSession));
 
             await _manager.AddSession(sessionParams);
 
@@ -100,6 +105,8 @@ namespace OpcSessions.tests
 
             // Assert
             _loggerMock.Received().LogWarning("session for app App2 already exist");
+            await _factoryMock.Received(1).GetSession(Arg.Any<ISessionParams>());
+            Assert.Same(existingUaSession, _manager.GetSession("App2"));
         }
 
         /// <summary>
@@ -126,7 +133,7 @@ namespace OpcSessions.tests
             // Arrange
             var sessionParams = Substitute.For<ISessionChannelParams>();
             sessionParams.AppId.Returns("App3");
-            sessionParams.ServerEndPoint.Returns("opc.tcp://localhost:4840");
+            sessionParams.ServerEndPoint.Returns(Endpoint);
 
             var sessionMock = Substitute.For<IOpcUaSession>();
             _factoryMock.GetSession(Arg.Any<ISessionParams>())

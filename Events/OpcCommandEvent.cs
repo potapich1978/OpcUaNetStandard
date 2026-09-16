@@ -24,6 +24,11 @@ namespace Events
         /// <summary>
         /// Browse server nodes
         /// </summary>
-        Browse
+        Browse,
+
+        /// <summary>
+        /// Browse server nodes and deliver the whole level at once
+        /// </summary>
+        BrowseComplete
     }
 }
