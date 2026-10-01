@@ -29,6 +29,16 @@ namespace Events
         /// <summary>
         /// Browse server nodes and deliver the whole level at once
         /// </summary>
-        BrowseComplete
+        BrowseComplete,
+
+        /// <summary>
+        /// Write a value to a tag
+        /// </summary>
+        WriteTagValue,
+
+        /// <summary>
+        /// Write a value to a tag and deliver the outcome to the caller
+        /// </summary>
+        WriteTagValueComplete
     }
 }

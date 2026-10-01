@@ -74,7 +74,7 @@ namespace Handlers
         private static async Task<Type[]> ReadDataTypes(ISession session, List<ReferenceDescription> nodes, CancellationToken token)
         {
             var dataTypes = new Type[nodes.Count];
-            var attributesToRead = new ReadValueIdCollection();
+            var variableIds = new List<NodeId>();
             var variableIndexes = new List<int>();
 
             for (var i = 0; i < nodes.Count; i++)
@@ -82,23 +82,20 @@ namespace Handlers
                 if (nodes[i].NodeClass != NodeClass.Variable)
                     continue;
 
-                var nodeId = (NodeId)nodes[i].NodeId;
-                attributesToRead.Add(new ReadValueId { NodeId = nodeId, AttributeId = Attributes.DataType });
-                attributesToRead.Add(new ReadValueId { NodeId = nodeId, AttributeId = Attributes.ValueRank });
+                variableIds.Add((NodeId)nodes[i].NodeId);
                 variableIndexes.Add(i);
             }
 
             if (variableIndexes.Count == 0)
                 return dataTypes;
 
-            var response = await session.ReadAsync(new RequestHeader(), 0, TimestampsToReturn.Neither, attributesToRead, token);
+            var variableTypes = await OpcDataTypeReader.ReadAsync(session, variableIds, token);
 
             for (var i = 0; i < variableIndexes.Count; i++)
             {
-                var dataTypeId = response.Results[2 * i].Value as NodeId;
-                var valueRank = response.Results[2 * i + 1].Value as int? ?? ValueRanks.Scalar;
-                var builtInType = TypeInfo.GetBuiltInType(dataTypeId, session.TypeTree);
-                dataTypes[variableIndexes[i]] = TypeInfo.GetSystemType(builtInType, valueRank);
+                var variableType = variableTypes[i];
+                dataTypes[variableIndexes[i]] = TypeInfo.GetSystemType(
+                    variableType.BuiltInType, variableType.ValueRank);
             }
 
             return dataTypes;
