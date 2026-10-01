@@ -53,6 +53,7 @@ The result is this integrated solution that maintains the reliability we needed 
 - **Automatic Session Recovery** – Reconnection and keep-alive mechanisms  
 - **Thread-Safe Operations** – Safe concurrent subscription and callback handling
 - **Browse Server** - Browse OPC nodes hierarchy node by node or one level at once, with value data types
+- **Write Tag Values** - Write a value to a tag, either fire-and-forget or with the outcome delivered to a callback
 
 
 ## Best Practices
@@ -83,12 +84,14 @@ graph TD
 ```    
 
 ### Event Dispatcher Pattern
-Five main event types drive the system:
+Seven main event types drive the system:
 - **RegisterSession** – Establishes a new OPC UA session  
 - **AddItemToSubscription** – Adds a monitored item to a subscription  
 - **RemoveItemFromSubscription** – Removes a monitored item from a subscription  
 - **BrowseServer** – Enumerates child nodes of a folder one by one with their value data types  
 - **BrowseServerComplete** – Enumerates child nodes of a folder and delivers the whole level at once  
+- **WriteTagValue** – Writes a value to a tag without reporting the outcome to the caller  
+- **WriteTagValueComplete** – Writes a value to a tag and delivers the outcome to a callback  
 
 ### Core Components
 - **OpcSessionsManager** – Manages OPC UA session lifecycle  
@@ -99,7 +102,7 @@ Five main event types drive the system:
 
 ## Installation
 ```xml
-<PackageReference Include="Potapich.OpcUaNetStandart" Version="1.4.0" />
+<PackageReference Include="Potapich.OpcUaNetStandart" Version="1.5.0" />
 ```
 
 # Quick Start
@@ -224,5 +227,58 @@ Caption = Diametr, FullName = "ns=2;s=KEL-120-2.KEL-120-2.Diam.Diametr", Writabl
 Caption = CapOpen, FullName = "ns=2;s=KEL-120-2.KEL-120-2.Diam.CapOpen", Writable = True, IsFolder = False, DataType = Boolean
 Caption = Count, FullName = "ns=2;s=KEL-120-2.KEL-120-2.Diam.Count", Writable = True, IsFolder = False, DataType = UInt16
 ```
+
+## Write Values To OPC Server
+```cs
+///write a value and do not wait for the outcome
+await opcChannel.Enqueue(new WriteTagValue(appId, tagId, 42));
+```
+`WriteTagValue` does not report the outcome to the caller: `Enqueue` returns right after the event is queued.
+When the session for `appId` is not registered, the value cannot be converted or the server rejects the write,
+the error is only logged through `IGenericEventDispatcherLogger`.
+
+When the caller needs the outcome, use `WriteTagValueComplete` and await its completion callback:
+```cs
+///write a value and get the outcome
+var completion = new TaskCompletionSource<bool>();
+await opcChannel.Enqueue(new WriteTagValueComplete(
+    appId,
+    tagId,
+    42,
+    error =>
+    {
+        if (error == null)
+            completion.SetResult(true);
+        else
+            completion.SetException(error);
+    }));
+
+await completion.Task;
+```
+The callback is invoked exactly once. On success it receives `null`.
+When the session for `appId` is not registered, it receives `InvalidOperationException`.
+When the server rejects the write, it receives `ServiceResultException` with the status code returned by the server
+(`BadNotWritable`, `BadNodeIdUnknown`, ...).
+
+The value is converted to the data type of the tag: before each write the data type of the tag is read
+from the server, so `42`, `42.0` and `"42"` are all written to a `UInt16` tag as `(ushort)42`.
+The following conversions are guaranteed:
+
+| Data type of the tag | Accepted values |
+|----------------------|-----------------|
+| `Boolean` | `bool`; an integer `0` or `1`; a string `"true"`, `"false"`, `"0"` or `"1"` |
+| `SByte`, `Byte`, `Int16`, `UInt16`, `Int32`, `UInt32`, `Int64`, `UInt64`, enumerations | any .NET integer; `float` or `double` without a fractional part; a string with an integer |
+| `Float`, `Double` | any .NET number except `decimal`; a string with a number |
+| `String` | a string; any .NET number except `decimal` |
+| one-dimensional arrays of these types | a .NET array, its elements are converted the same way |
+
+Strings are parsed with the invariant culture: `"12.5"`, not `"12,5"`.
+Conversions for tags of other data types are not guaranteed: pass a value of the .NET type
+reported as `DataType` by `BrowseServer`.
+
+A value that cannot be converted is not written and is reported as `ServiceResultException`:
+- `BadTypeMismatch` – a number with a fractional part for an integer tag, a string that is not a value of the data type,
+a .NET type unknown to OPC UA (such as `decimal`)
+- `BadOutOfRange` – a number outside the range of the data type
 
 
